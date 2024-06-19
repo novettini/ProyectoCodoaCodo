@@ -1,6 +1,10 @@
 # USUARIO = "admin"
 # PASSWORD = "admin"
 
+def bloquear_sesion():
+    print("Sesion bloqueada")
+    bloquear_sesion()
+
 # Inicio de sesión
 def iniciar_sesion():
     intento_inicio_sesion =3
@@ -13,7 +17,8 @@ def iniciar_sesion():
             intento_inicio_sesion -= 1
             print("usuario y/o contraseña incorrecta/s")
             print(intento_inicio_sesion)
-    return
+    if intento_inicio_sesion == 0:
+        bloquear_sesion()
 # Fin inicio
 iniciar_sesion()
 
