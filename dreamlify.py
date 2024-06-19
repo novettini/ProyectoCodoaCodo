@@ -1,3 +1,11 @@
+#APP DE SUEÑO: DREAMLIFY.
+#EL USUARIO INGRESA DATOS SOBRE EL DÍA Y SU RUTINA DE SUEÑO.
+#LA APP ALMACENA ESOS DATOS CON EL ID "DIA".
+#EL USUARIO PUEDE ACCEDER A SUS DATOS DE SUEÑO DEL DÍA.
+#LA APP LE DA CONSEJOS DE SUEÑO BASADOS EN LOS DATOS ALMACENADOS DEL DÍA.
+#ANTES DE TERMINAR LA CARGA, LE PREGUNTA SI LOS DATOS SON CORRECTOS, Y SINO LE DA LA POSIBILIDAD DE CAMBIARLOS.
+#EL USUARIO PUEDE ELIMINAR SUS DATOS DE SUEÑO DEL DÍA INCORRECTOS.
+
 # USUARIO = "admin"
 # PASSWORD = "admin"
 
@@ -13,6 +21,7 @@ def iniciar_sesion():
         password = input("Contraseña: ")
         if usuario == "admin" and password == "admin":
             print("Bienvenido")
+            return
         else: 
             intento_inicio_sesion -= 1
             print("usuario y/o contraseña incorrecta/s")
@@ -28,6 +37,11 @@ def enter_para_continuar():
 dias = {}
 
 opcion_menu = 0
+
+
+# DARLE LA OPCION AL USUARIO DE ELEGIR EL DATO POR EL ID "DIA" Y EN BASE A ESO MOSTRARLE LOS DEMAS DATOS CARGADOS.
+# DIA VA DE  1 A 31// HORAS DORMIDAS (FLOAT 8.30)// SUEÑO INTERRUMPIDO INPUT(1 SI, 0 NO, OTRO NUMERO VOLVER A INGRESAR)//
+# EJERCICIO ANTES INPUT(1 SI, 0 NO, OTRO NUMERO VOLVER A INGRESAR)//TOMAR CAFE  INPUT(1 SI, 0 NO, OTRO NUMERO VOLVER A INGRESAR)// PRINT DE TODOS LOS DATOS DEL DIA.
 
 
 while opcion_menu != "0": # True o False
