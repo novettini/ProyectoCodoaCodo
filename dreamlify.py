@@ -6,8 +6,15 @@
 #ANTES DE TERMINAR LA CARGA, LE PREGUNTA SI LOS DATOS SON CORRECTOS, Y SINO LE DA LA POSIBILIDAD DE CAMBIARLOS.
 #EL USUARIO PUEDE ELIMINAR SUS DATOS DE SUEÑO DEL DÍA INCORRECTOS.
 
+
+# declarar variables
 # USUARIO = "admin"
 # PASSWORD = "admin"
+cafe_tomado = 0
+ejercicio_antes=0
+horas_dormidas=0
+suenio_sin_interrumpir=0
+
 
 def bloquear_sesion():
     print("Sesion bloqueada")
@@ -126,12 +133,32 @@ while opcion_menu != "0": # True o False
         
     elif opcion_menu == "5":
         print("Mostrando día...")
+    
+        enter_para_continuar()  
         
-        
+    elif opcion_menu == "6":
+    
+        for dia, datos in dias.items():
+            if (datos["tomar_cafe"] == 1):
+                cafe_tomado +=1
+            if (datos["tomar_cafe"] == 2):
+                cafe_tomado -=1
+        if cafe_tomado>1:
+            print(f"""Has tomado café en {cafe_tomado} días.
+                    El consumo elevado de café es perjudicial para la salud""")
+        if cafe_tomado==0:
+            print(f"""Has tomado café en {cafe_tomado} días.
+                    estás bien, podria ser mejor, pero venis bien, dale bajá el consumo""")
+        if cafe_tomado<1:
+            print(f"""Has tomado café menos días antes de dormir.
+                    Felicitaciones, segui sin consumir café""")        
+            print("-"*40)
+        enter_para_continuar()
+
     else:
         print("Opción incorrecta.")
-        
-    
+        enter_para_continuar()
+
     if opcion_menu == "0":
         print("Gracias por usar Dreamlify.")
-        break
+        break    
