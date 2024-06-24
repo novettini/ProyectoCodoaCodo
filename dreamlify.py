@@ -1,3 +1,35 @@
+import tkinter as tk
+
+def iniciar_sesion():
+    intento_inicio_sesion =3
+    while intento_inicio_sesion > 0:
+        usuario = input("Usuario: ")
+        password = input("Contraseña: ")
+        if usuario == "admin" and password == "admin":
+            print("Bienvenido")
+            return
+        else: 
+            intento_inicio_sesion -= 1
+            print("usuario y/o contraseña incorrecta/s")
+            print(intento_inicio_sesion)
+    if intento_inicio_sesion == 0:
+        bloquear_sesion()
+
+
+
+ventana =tk.Tk()
+ventana.title("Dreamlify, tu app de sueño")
+ventana.geometry("375x800+750+120")
+# ventana.minsize(375, 500)
+ventana.resizable(False,True)
+ventana.iconbitmap("dreammify.jpeg")
+ventana.configure(background="#58D68D")
+# ventana.mainloop()
+etiqueta = tk.Label(text=iniciar_sesion())
+etiqueta.config(font=("arial",14), background="green" )
+etiqueta.pack()
+
+
 #APP DE SUEÑO: DREAMLIFY.
 #EL USUARIO INGRESA DATOS SOBRE EL DÍA Y SU RUTINA DE SUEÑO.
 #LA APP ALMACENA ESOS DATOS CON EL ID "DIA".
