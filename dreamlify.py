@@ -111,9 +111,9 @@ while opcion_menu != "0": # True o False
             enter_para_continuar()
         else:
             horas_dormidas = float(input("Ingrese las horas dormidas: "))
-            suenio_interrumpido = int(input("¿Tu sueño fue interrumpido? (1 Sí, 2 No): "))
-            hacer_ejercicio = int(input("¿Hiciste ejercicio antes? (1 Sí, 2 No): "))
-            tomar_cafe = int(input("¿Tomaste café antes de acostarte? (1 Sí, 2 No): "))
+            suenio_interrumpido = int(input("¿Tu sueño fue interrumpido? (1 por Sí, o 2 por No): "))
+            hacer_ejercicio = int(input("¿Hiciste ejercicio antes? (1 por Sí, o 2 por No): "))
+            tomar_cafe = int(input("¿Tomaste café antes de acostarte? (1 por Sí, o 2 por No): "))
         
             dias[dia] = {
             'horas_dormidas': horas_dormidas,

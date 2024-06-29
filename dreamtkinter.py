@@ -1,7 +1,11 @@
 import tkinter as tk
 from tkinter import *
+from tkinter import Toplevel
+from tkinter import ttk
 from tkinter.messagebox import *
 import mariadb
+import functools
+
 
 root= Tk()
 root.title("Dreamlify, tu app de sueño")
@@ -30,7 +34,7 @@ def nueva_ventana():
     ventana_secundaria= Toplevel()
     ventana_secundaria.minsize(375, 500)
     ventana_secundaria.resizable(False,True)
-    
+
     Label(ventana_secundaria, text="Dia").pack()
     e_dia= Entry(ventana_secundaria)
     e_dia.pack()
@@ -48,8 +52,11 @@ def nueva_ventana():
     e_ejercicio.pack()  
                 
     Label(ventana_secundaria, text="Cafe antes").pack()
-    e_cafe= Entry(ventana_secundaria)
-    e_cafe.pack()     
+    cafe_var = tk.StringVar(value="no")  # Variable para almacenar el valor seleccionado
+    tk.Radiobutton(ventana_secundaria, text="Si tomó café", variable=cafe_var, value="si").pack()
+    tk.Radiobutton(ventana_secundaria, text="No tomó café", variable=cafe_var,value="no").pack()
+    
+    
     boton= Button(ventana_secundaria, text="cargar datos",command=lambda: agregar_dia())
     boton.pack()
 
@@ -59,7 +66,7 @@ def nueva_ventana():
             horas = e_horas.get()   
             interrumpido = e_interrumpido.get()
             ejercicio= e_ejercicio.get()
-            cafe= e_cafe.get()
+            cafe= cafe_var.get()
             try:
                 cursor.execute("INSERT INTO datos_del_dia"
                             "(dia, horas_dormidas, suenio_interrumpido, cafe_tomado, ejercicio_antes) "
@@ -97,7 +104,90 @@ def ventana_borrar_datos():
                 print(f"Error al borrar: {error_eliminando}")     
 
             
+def ventana_mostrar_dia():
+    mostrar_dato= Toplevel()
+    mostrar_dato.minsize(375, 500)
+    mostrar_dato.resizable(False,True)
+    
+    Label(mostrar_dato, text="Dia a mostrar").pack()
+    e_dia= Entry(mostrar_dato)
+    e_dia.pack()
+            
+    boton= Button(mostrar_dato, text="mostrar datos del día",command=lambda: muestra_un_dia())
+    boton.pack()
 
+             
+    def muestra_un_dia():
+            try:
+                dia = e_dia.get()
+                cursor.execute(f"""SELECT dia, horas_dormidas, suenio_interrumpido, cafe_tomado, ejercicio_antes FROM datos_del_dia WHERE dia = {dia}""")
+                rows = cursor.fetchall()
+                if not rows:
+                     print("No hay datos para ese día")
+                else:
+                    for row in rows:
+                        tk.Label(mostrar_dato, text=f"""Dia: {row[0]}""").pack(),
+                        tk.Label(mostrar_dato, text=f"""Horas Dormidas: {row[1]}""").pack(),
+                        tk.Label(mostrar_dato, text=f"""Sueño interrumpido: {row[2]},""").pack(),
+                        tk.Label(mostrar_dato, text=f"""Tomó café: {row[3]},""").pack(),
+                        tk.Label(mostrar_dato, text=f"""Hizo ejercicio antes: {row[4]},""").pack(),
+                                
+                    conexion.commit()
+            except mariadb.Error as error_dato:
+                print(f"Error al poner el dato: {error_dato}")     
+    
+
+        
+      
+def ventana_mostrar_todos_los_dias():
+    mostrar_datos= Toplevel()
+    mostrar_datos.minsize(375, 500)
+    mostrar_datos.resizable(False,True)
+    mostrar_datos.configure(background="red")
+    
+    boton= Button(mostrar_datos, text="Mostrar todos los datos del día",command=lambda: muestra_todos_los_datos())
+    boton.pack()
+
+    columnas = ("dia", "horas_dormidas", "suenio_interrumpido", "cafe_tomado", "ejercicio_antes")
+    tree = ttk.Treeview(mostrar_datos, columns=columnas, show='headings')
+    tree.heading("dia", text="Día")
+    tree.heading("horas_dormidas", text="Horas Dormidas")
+    tree.heading("suenio_interrumpido", text="Sueño Interrumpido")
+    tree.heading("cafe_tomado", text="Tomó Café")
+    tree.heading("ejercicio_antes", text="Hizo Ejercicio Antes")
+    tree.pack(expand=True, fill='both')
+
+    # ANCHO COLUMNAS
+    tree.column("dia", width=75)
+    tree.column("horas_dormidas", width=75)
+    tree.column("suenio_interrumpido", width=75)
+    tree.column("cafe_tomado", width=75)
+    tree.column("ejercicio_antes", width=75)
+
+
+
+    def muestra_todos_los_datos():
+            try:
+                sqlSelect = "SELECT dia, horas_dormidas, suenio_interrumpido, cafe_tomado, ejercicio_antes FROM datos_del_dia"
+                cursor = conexion.cursor()
+                cursor.execute(sqlSelect)
+                almacenados = cursor.fetchall()
+            
+                for item in tree.get_children():
+                    tree.delete(item)  # Limpiar la tabla antes de mostrar nuevos datos
+                
+                if not almacenados:
+                    tree.insert("", tk.END, values=("No hay datos disponibles", "", "", "", ""))
+                else:
+                    for row in almacenados:
+                        tree.insert("", tk.END, values=row)
+            
+                conexion.commit()
+            except mariadb.Error as error_obteniendo:
+                 for item in tree.get_children():
+                    tree.delete(item)
+            tree.insert("", tk.END, values=(f"Error al obtener los datos: {error_obteniendo}", "", "", "", ""))
+        
 
 
 
@@ -118,7 +208,6 @@ def añadir_dia():
           2 - Listar días
           3 - Buscar día
           4 - Borrar día
-          5 - Modificar día
           """)
     Text=(""" 
             - Añadir día (1 - 31)
@@ -170,10 +259,9 @@ titulo = Label(root, text="""Bienvenido a Dreamlify,
                seleccione una opcion:""")
 titulo.pack()
 opcion_1= Button(root, text="Añadir día",command=nueva_ventana).pack()
-opcion_2= Button(root, text="Listar días").pack()
-opcion_3= Button(root, text="Buscar día").pack()
+opcion_2= Button(root, text="Listar días",command=ventana_mostrar_todos_los_dias).pack()
+opcion_3= Button(root, text="Buscar día",command=ventana_mostrar_dia).pack()
 opcion_4= Button(root, text="Borrar día", command=ventana_borrar_datos).pack()
-opcion_5= Button(root, text="Modificar día").pack()
 opcion_0= Button(root, text="Salir",command=lambda:(salir())).pack()
 
 
