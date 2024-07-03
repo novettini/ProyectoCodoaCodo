@@ -4,4 +4,11 @@
 "sueño_interrumpido": "no",
 "hacer_ejercicio": "si",
 "tomar_cafe" : "no"
+},
+{
+"dia":"2",
+"horas_dormidas": "8",
+"sueño_interrumpido": "no",
+"hacer_ejercicio": "si",
+"tomar_cafe" : "no"
 }]
